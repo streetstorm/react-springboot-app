@@ -1,14 +1,14 @@
 # React-Springboot-App
 
-This is for the beigners
+Тренировочный проект для сборки frontend и backend компонентов приложения в Docker
 
-## Tech We Used
+## Технологии
 
 - ReactJs
 - Spring boot
 
 
-## Steps to run in your machine
+## Локальный запуск
 
 #### Run the following commands
 ```
@@ -16,7 +16,3 @@ npm i
 npm run start
 ```
 
-
-
-
-#### Hope you liked this project, dont forget to ⭐ the repo.
