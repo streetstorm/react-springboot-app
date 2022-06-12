@@ -68,6 +68,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3080:80"
+    environment:
+      FRONTEND_HOST: 'frontend'
+      FRONTEND_PORT: '80'
     networks:
       - frontend
 
