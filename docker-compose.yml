@@ -1,4 +1,10 @@
 version: '3'
+
+x-common-variables: &common-variables
+  MYSQL_DATABASE: 'fullstack'
+  MYSQL_USER: 'fullstack_user'
+  MYSQL_PASSWORD: 'secret-pw'
+
 services:
   db:
     image: mysql:8
@@ -6,12 +12,15 @@ services:
     restart: always
     expose:
       - "3306"
-    environment:
-      MYSQL_DATABASE: 'fullstack'
-      MYSQL_ROOT_PASSWORD: 'my-secret-pw'
     ports:
-      - 3306:3306
+      - 127.0.0.1:3306:3306
+    environment:
+      <<: *common-variables
+      MYSQL_ROOT_PASSWORD: 'root-secret-pw'
+
   backend:
+    depends_on:
+      - db
     container_name: studentsystem
     restart: always
     build:
@@ -22,13 +31,16 @@ services:
         maven_version: 0.0.1-SNAPSHOT
     expose:
       - "8080"
-    environment:
-      - JAVA_OPTS=-server -Xms512M -Xmx1024M
-    depends_on:
-      - db
     ports:
-      - "8080:8080"
+      - 127.0.0.1:8080:8080
+    environment:
+      <<: *common-variables
+      MYSQL_HOST: 'db'
+      MYSQL_PORT: '3306'
+
   frontend:
+    depends_on:
+      - backend
     container_name: studentfrontend
     restart: always
     build:
@@ -37,4 +49,14 @@ services:
     expose:
       - "3000"
     ports:
-      - 3000:3000
+      - 127.0.0.1:3000:3000
+
+  nginx:
+    depends_on:
+      - frontend
+    restart: always
+    build:
+      context: ./lb
+      dockerfile: Dockerfile
+    ports:
+      - "3080:80"
