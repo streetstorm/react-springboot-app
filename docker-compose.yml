@@ -17,6 +17,8 @@ services:
     environment:
       <<: *common-variables
       MYSQL_ROOT_PASSWORD: 'root-secret-pw'
+    networks:
+      - backend
 
   backend:
     depends_on:
@@ -37,6 +39,9 @@ services:
       <<: *common-variables
       MYSQL_HOST: 'db'
       MYSQL_PORT: '3306'
+    networks:
+      - backend
+      - frontend
 
   frontend:
     depends_on:
@@ -47,16 +52,30 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     expose:
-      - "3000"
+      - "80"
     ports:
-      - 127.0.0.1:3000:3000
+      - 127.0.0.1:80:80
+    networks:
+      - backend
+      - frontend
 
-  nginx:
+  lb:
     depends_on:
       - frontend
+    container_name: lb-nginx
     restart: always
     build:
       context: ./lb
       dockerfile: Dockerfile
     ports:
       - "3080:80"
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+    name: frontend
+  backend:
+    driver: bridge
+    name: backend

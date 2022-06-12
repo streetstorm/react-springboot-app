@@ -24,4 +24,6 @@ RUN set -x; \
 
 USER java
 
+EXPOSE 8080
+
 CMD java ${JAVA_OPTS} -jar ${APP}.jar
