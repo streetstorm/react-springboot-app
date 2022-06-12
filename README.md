@@ -16,3 +16,8 @@ npm i
 npm run start
 ```
 
+## Docker-compose
+
+```
+docker-compose up --build
+```
